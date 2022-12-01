@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
         required: true
         // validator
     },
+    age: {
+        type: Number,
+        default: 0
+    },
     password: {
         type: String,
         requied: true
@@ -42,6 +46,7 @@ userSchema.methods.createToken = async function() {
     this.tokens.push({ token })
     await this.save()
     
+    return token
 }
 
 // finding a users account using email and password

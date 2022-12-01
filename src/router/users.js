@@ -1,13 +1,15 @@
 const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
+const auth = require('../auth/authentication')
+
 
 router.post('/users/sign-up', async(req, res) => {
    const newUser = new User(req.body)
 
    try {
-     await newUser.createToken()
-    res.send({newUser})
+     const token = await newUser.createToken()
+     res.status(201).send({newUser, token}) 
    } catch(e) {
     res.status(400).send(e)
    }
@@ -24,5 +26,9 @@ router.post('/users/login', async(req, res) => {
     res.status(400).send(e.message)
   }
     
+})
+
+router.get('/users/profile', auth, async(req, res) => {
+    res.send(req.user)
 })
 module.exports = router
